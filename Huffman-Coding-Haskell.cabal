@@ -54,6 +54,7 @@ test-suite Huffman-Coding-Haskell-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      Data.HuffmanSpec
       Paths_Huffman_Coding_Haskell
   hs-source-dirs:
       test

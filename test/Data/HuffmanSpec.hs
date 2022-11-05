@@ -10,3 +10,6 @@ spec = do
     it "returns the Map of frequency of characters" $ do
       let result = Map.fromList [('A', 3), ('B', 2), ('C', 1)]
       genFrequencyMap "ABCABA" `shouldBe` result
+  describe "orderByFrequency" $ do
+    it "sort characters by frequency" $ do
+      orderByFrequency "AAAABBBCCD" `shouldBe` "ABCD"
