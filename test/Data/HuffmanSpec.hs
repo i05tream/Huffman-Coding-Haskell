@@ -27,3 +27,20 @@ spec = do
             huffmanTree = Node (Sum 3) [right, left]
             trees = [huffmanTree]
         genHuffmanTree trees `shouldBe` huffmanTree
+    context "when some trees exist" $
+      it "combine trees with minimum frequency" $ do
+        let trees = [leaf 'x' 700, leaf 'y' 7, leaf 'z' 70]
+            huffmanTree =
+              Node
+                (Sum 777)
+                [ leaf 'x' 700
+                , Node
+                    (Sum 77)
+                    [ leaf 'z' 70
+                    , leaf 'y' 7
+                    ]
+                ]
+        genHuffmanTree trees `shouldBe` huffmanTree
+ where
+  leaf :: Char -> Int -> Tree HuffmanTreeNode
+  leaf c x = Node (SingleChar c x) []
