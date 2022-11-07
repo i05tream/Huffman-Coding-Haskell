@@ -33,13 +33,17 @@ spec = do
               , leaf 'C' 1
               ]
           ]
-  describe "huffmanCodeTable" $ do
-    context "when apply to leaf" $
-      it "return huffman code" $ do
-        huffmanCodeTable (leaf 'a' 100) "001" `shouldBe` [('a', "001")]
-    context "when apply to node" $ do
-      it "return huffman codes of leaves" $ do
-        huffmanCodeTable (Node (Sum 6) [leaf 'a' 4, leaf 'b' 2]) "00" `shouldBe` [('a', "000"), ('b', "001")]
+  describe "huffmanCodeMap" $ do
+    it "returns table of each Char and its code" $ do
+      huffmanCodeMap "AAAAAABBCDDEEEEEF"
+        `shouldBe` fromList
+          [ ('A', "00")
+          , ('E', "01")
+          , ('B', "100")
+          , ('D', "101")
+          , ('C', "110")
+          , ('F', "111")
+          ]
  where
   leaf :: Char -> Int -> Tree HuffmanTreeNode
   leaf c x = Node (SingleChar c x) []
