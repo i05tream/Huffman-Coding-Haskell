@@ -7,18 +7,13 @@ import Test.Hspec
 
 spec :: Spec
 spec = do
-  describe "genFrequencyMap" $ do
-    it "returns the Map of frequency of characters" $ do
-      let result = Map.fromList [('A', 3), ('B', 2), ('C', 1)]
-      genFrequencyMap "ABCABA" `shouldBe` result
-  describe "initialFrequency" $ do
-    it "returns List of leaves" $ do
-      let result =
-            [ (Node (SingleChar 'd' 3) [])
-            , (Node (SingleChar 'e' 2) [])
-            , (Node (SingleChar 'f' 1) [])
-            ]
-      initialFrequency "dedfed" `shouldBe` result
+  describe "leaves" $ do
+    it "returns Huffman tree leaves ordered by frequency desc" $ do
+      leaves "dedfed"
+        `shouldBe` [ leaf 'd' 3
+                   , leaf 'e' 2
+                   , leaf 'f' 1
+                   ]
   describe "genHuffmanTree" $ do
     context "when number of tree is 1" $ do
       it "returns tree" $ do
