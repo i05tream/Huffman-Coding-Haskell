@@ -1,5 +1,6 @@
 module Data.Huffman where
 
+import Data.List (sortOn)
 import Data.Map.Strict as Map
 import Data.Tree
 
@@ -17,3 +18,15 @@ initialFrequency cs =
 
 genHuffmanTree :: [Tree HuffmanTreeNode] -> Tree HuffmanTreeNode
 genHuffmanTree [t] = t
+genHuffmanTree ts =
+  let sortedByFreq = sortOn extractFreq ts
+      (minTree : nextMinTree : restTrees) = sortedByFreq
+   in genHuffmanTree $ combine minTree nextMinTree : restTrees
+ where
+  extractFreq :: Tree HuffmanTreeNode -> Int
+  extractFreq (Node (SingleChar _ x) _) = x
+  extractFreq (Node (Sum x) _) = x
+
+  combine :: Tree HuffmanTreeNode -> Tree HuffmanTreeNode -> Tree HuffmanTreeNode
+  combine less greater =
+    Node (Sum (extractFreq less + extractFreq greater)) [greater, less]
