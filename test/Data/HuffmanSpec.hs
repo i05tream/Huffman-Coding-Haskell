@@ -41,6 +41,10 @@ spec = do
                     ]
                 ]
         genHuffmanTree trees `shouldBe` huffmanTree
+  describe "code" $ do
+    context "when apply to leaf" $
+      it "return huffman code" $ do
+        code (leaf 'a' 100) "00" `shouldBe` [('a', "001")]
  where
   leaf :: Char -> Int -> Tree HuffmanTreeNode
   leaf c x = Node (SingleChar c x) []
