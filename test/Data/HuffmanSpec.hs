@@ -14,14 +14,13 @@ spec = do
                    , leaf 'e' 2
                    , leaf 'f' 1
                    ]
-  describe "genHuffmanTree" $ do
+  describe "huffmanTree" $ do
     context "when number of tree is 1" $ do
       it "returns tree" $ do
-        let left = Node (SingleChar 'a' 2) []
-            right = Node (SingleChar 'b' 1) []
-            huffmanTree = Node (Sum 3) [right, left]
-            trees = [huffmanTree]
-        genHuffmanTree trees `shouldBe` huffmanTree
+        let tree = Node (Sum 3) [left, right]
+            left = leaf 'a' 2
+            right = leaf 'b' 1
+        huffmanTree [tree] `shouldBe` tree
     context "when some trees exist" $
       it "combine trees with minimum frequency" $ do
         let trees = [leaf 'x' 700, leaf 'y' 7, leaf 'z' 70]
