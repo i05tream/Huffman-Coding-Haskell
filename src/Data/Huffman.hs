@@ -30,3 +30,6 @@ genHuffmanTree ts =
   combine :: Tree HuffmanTreeNode -> Tree HuffmanTreeNode -> Tree HuffmanTreeNode
   combine less greater =
     Node (Sum (extractFreq less + extractFreq greater)) [greater, less]
+
+huffmanCodeTable :: Tree HuffmanTreeNode -> String -> [(Char, String)]
+huffmanCodeTable (Node (SingleChar c _) []) code = [(c, code)]
