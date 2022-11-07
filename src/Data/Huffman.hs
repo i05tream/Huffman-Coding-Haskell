@@ -1,9 +1,11 @@
 module Data.Huffman where
 
 import Data.List (sort, sortOn)
-import Data.Map.Strict (Map, fromList)
+import Data.Map.Strict (Map, fromList, lookup)
+import Data.Maybe (fromJust)
 import Data.Ord (Down (Down))
 import Data.Tree
+import Prelude hiding (lookup)
 
 data HuffmanTreeNode = SingleChar Char Int | Sum Int deriving (Show, Eq)
 
@@ -66,7 +68,7 @@ huffmanTree = leavesToTree . leaves
   leavesToTree [t] = t
   leavesToTree ts = leavesToTree . combine $ ts
 
--- | 文字列から文字列ごとの符号のMapを生成する関数
+-- | 文字列から文字列ごとのHuffman符号のMapを生成する関数
 huffmanCodeMap :: String -> Map Char String
 huffmanCodeMap = fromList . table . huffmanTree
  where
@@ -75,3 +77,17 @@ huffmanCodeMap = fromList . table . huffmanTree
   table' (Node (SingleChar c _) []) code = [(c, code)]
   table' (Node (Sum _) [left, right]) code =
     table' left (code ++ "0") ++ table' right (code ++ "1")
+
+{- | 文字列をHuffman符号の並びに変換する関数
+
+ >>> huffmanCode "AAAAAABBCDDEEEEEF"
+ "0000000000001001001101011010101010101111"
+
+ >>> huffmanCode ""
+ ""
+-}
+huffmanCode :: String -> String
+huffmanCode "" = ""
+huffmanCode cs =
+  let codeMap = huffmanCodeMap cs
+   in cs >>= fromJust . flip lookup codeMap
