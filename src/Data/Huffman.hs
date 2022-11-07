@@ -1,20 +1,37 @@
 module Data.Huffman where
 
-import Data.List (sortOn)
+import Data.List (sort, sortOn)
 import Data.Map.Strict as Map
 import Data.Tree
 
 data HuffmanTreeNode = SingleChar Char Int | Sum Int deriving (Show, Eq)
 
-genFrequencyMap :: String -> Map.Map Char Int
-genFrequencyMap cs =
-  let cs' = zip cs $ repeat 1
-   in Map.fromListWith (+) cs'
+{- |
+ Huffman treeを作る際の最初の葉を求める関数
 
-initialFrequency :: String -> [Tree HuffmanTreeNode]
-initialFrequency cs =
-  let freqs = genFrequencyMap cs
-   in Map.elems . Map.mapWithKey (\k v -> Node (SingleChar k v) []) $ freqs
+ 葉は文字の出現頻度の降順で返される
+
+ >>> leaves "BACAAB"
+ [Node {rootLabel = SingleChar 'A' 3, subForest = []},Node {rootLabel = SingleChar 'B' 2, subForest = []},Node {rootLabel = SingleChar 'C' 1, subForest = []}]
+-}
+leaves :: String -> [Tree HuffmanTreeNode]
+leaves cs = [Node (SingleChar c n) [] | (c, n) <- freqsDesc]
+ where
+  freqsDesc = reverse . sortOn snd $ freqs
+  freqs = [(head chunk, length chunk) | chunk <- chunkSameChars . sort $ cs]
+
+{- |
+ 文字列を同じ文字の連続ごとに区切る関数
+
+ >>> chunkSameChars "AAABBCC"
+ ["AAA","BB","CC"]
+
+ >>> chunkSameChars ""
+ []
+-}
+chunkSameChars :: String -> [String]
+chunkSameChars "" = []
+chunkSameChars cs@(c : _) = let (chunk, rest) = span (== c) cs in chunk : chunkSameChars rest
 
 genHuffmanTree :: [Tree HuffmanTreeNode] -> Tree HuffmanTreeNode
 genHuffmanTree [t] = t
