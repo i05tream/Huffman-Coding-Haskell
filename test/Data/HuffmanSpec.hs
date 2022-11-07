@@ -14,6 +14,13 @@ spec = do
                    , leaf 'e' 2
                    , leaf 'f' 1
                    ]
+  describe "combine" $ do
+    context "when apply to leaves" $ do
+      it "combine 2 leaves with least frequencie" $ do
+        combine [leaf 'x' 5, leaf 'y' 4, leaf 'z' 3]
+          `shouldBe` [ leaf 'x' 5
+                     , Node (Sum 7) [leaf 'y' 4, leaf 'z' 3]
+                     ]
   describe "huffmanTree" $ do
     context "when number of tree is 1" $ do
       it "returns tree" $ do
