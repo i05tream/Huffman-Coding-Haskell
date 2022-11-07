@@ -45,6 +45,9 @@ spec = do
     context "when apply to leaf" $
       it "return huffman code" $ do
         huffmanCodeTable (leaf 'a' 100) "001" `shouldBe` [('a', "001")]
+    context "when apply to node" $ do
+      it "return huffman codes of leaves" $ do
+        huffmanCodeTable (Node (Sum 6) [leaf 'a' 4, leaf 'b' 2]) "00" `shouldBe` [('a', "000"), ('b', "001")]
  where
   leaf :: Char -> Int -> Tree HuffmanTreeNode
   leaf c x = Node (SingleChar c x) []
