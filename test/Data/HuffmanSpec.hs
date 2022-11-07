@@ -25,5 +25,5 @@ spec = do
         let left = Node (SingleChar 'a' 2) []
             right = Node (SingleChar 'b' 1) []
             huffmanTree = Node (Sum 3) [right, left]
-            leaves = [right, left]
-        genHuffmanTree leaves `shouldBe` huffmanTree
+            trees = [huffmanTree]
+        genHuffmanTree trees `shouldBe` huffmanTree
