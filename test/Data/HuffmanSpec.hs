@@ -22,9 +22,9 @@ spec = do
             right = leaf 'b' 1
         huffmanTree [tree] `shouldBe` tree
     context "when some trees exist" $
-      it "combine trees with minimum frequency" $ do
-        let trees = [leaf 'x' 700, leaf 'y' 7, leaf 'z' 70]
-            huffmanTree =
+      it "combine trees" $ do
+        let leaves' = [leaf 'x' 700, leaf 'y' 7, leaf 'z' 70]
+            tree =
               Node
                 (Sum 777)
                 [ leaf 'x' 700
@@ -34,7 +34,7 @@ spec = do
                     , leaf 'y' 7
                     ]
                 ]
-        genHuffmanTree trees `shouldBe` huffmanTree
+        huffmanTree leaves' `shouldBe` tree
   describe "huffmanCodeTable" $ do
     context "when apply to leaf" $
       it "return huffman code" $ do
