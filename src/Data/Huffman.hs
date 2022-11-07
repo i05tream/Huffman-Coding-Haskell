@@ -33,3 +33,4 @@ genHuffmanTree ts =
 
 huffmanCodeTable :: Tree HuffmanTreeNode -> String -> [(Char, String)]
 huffmanCodeTable (Node (SingleChar c _) []) code = [(c, code)]
+huffmanCodeTable (Node (Sum _) [left, right]) code = huffmanCodeTable left (code ++ "0") ++ huffmanCodeTable right (code ++ "1")
