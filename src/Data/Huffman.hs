@@ -1,6 +1,8 @@
 module Data.Huffman where
 
 import Data.List (sort, sortOn)
+import Data.Map.Strict (Map, fromList)
+import Data.Ord (Down (Down))
 import Data.Tree
 
 data HuffmanTreeNode = SingleChar Char Int | Sum Int deriving (Show, Eq)
@@ -11,6 +13,7 @@ type HuffmanTree = Tree HuffmanTreeNode
  Huffman treeを作る際の最初の葉を求める関数
 
  葉は文字の出現頻度の降順で返される
+ 同じ出現頻度の文字の葉はASCII Codeの昇順に並べられる
 
  >>> leaves "BACAAB"
  [Node {rootLabel = SingleChar 'A' 3, subForest = []},Node {rootLabel = SingleChar 'B' 2, subForest = []},Node {rootLabel = SingleChar 'C' 1, subForest = []}]
@@ -18,7 +21,7 @@ type HuffmanTree = Tree HuffmanTreeNode
 leaves :: String -> [HuffmanTree]
 leaves cs = [Node (SingleChar c n) [] | (c, n) <- freqsDesc]
  where
-  freqsDesc = reverse . sortOn snd $ freqs
+  freqsDesc = sortOn (Down . snd) freqs
   freqs = [(head chunk, length chunk) | chunk <- chunkSameChars . sort $ cs]
 
 {- |
@@ -63,6 +66,12 @@ huffmanTree = leavesToTree . leaves
   leavesToTree [t] = t
   leavesToTree ts = leavesToTree . combine $ ts
 
-huffmanCodeTable :: Tree HuffmanTreeNode -> String -> [(Char, String)]
-huffmanCodeTable (Node (SingleChar c _) []) code = [(c, code)]
-huffmanCodeTable (Node (Sum _) [left, right]) code = huffmanCodeTable left (code ++ "0") ++ huffmanCodeTable right (code ++ "1")
+-- | 文字列から文字列ごとの符号のMapを生成する関数
+huffmanCodeMap :: String -> Map Char String
+huffmanCodeMap = fromList . table . huffmanTree
+ where
+  table t = table' t ""
+
+  table' (Node (SingleChar c _) []) code = [(c, code)]
+  table' (Node (Sum _) [left, right]) code =
+    table' left (code ++ "0") ++ table' right (code ++ "1")
