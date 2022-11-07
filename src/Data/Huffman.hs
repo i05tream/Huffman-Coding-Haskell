@@ -1,7 +1,6 @@
 module Data.Huffman where
 
 import Data.List (sort, sortOn)
-import Data.Map.Strict as Map
 import Data.Tree
 
 data HuffmanTreeNode = SingleChar Char Int | Sum Int deriving (Show, Eq)
@@ -35,20 +34,27 @@ chunkSameChars :: String -> [String]
 chunkSameChars "" = []
 chunkSameChars cs@(c : _) = let (chunk, rest) = span (== c) cs in chunk : chunkSameChars rest
 
--- | Huffman treeの葉からHuffman treeを生成する関数
-huffmanTree :: [HuffmanTree] -> HuffmanTree
-huffmanTree [t] = t
-
-genHuffmanTree :: [Tree HuffmanTreeNode] -> Tree HuffmanTreeNode
-genHuffmanTree [t] = t
-genHuffmanTree ts =
-  let sortedByFreq = sortOn extractFreq ts
-      (minTree : nextMinTree : restTrees) = sortedByFreq
-   in genHuffmanTree $ combine minTree nextMinTree : restTrees
+{- | 最も頻度の合計が小さくなるノードの組み合わせを選び、それらのノードを結んだ木を作成する
+ 最も頻度の合計が小さくなるノードの組み合わせが複数存在する場合、より左側の組み合わせが優先的に処理される
+-}
+combine :: [HuffmanTree] -> [HuffmanTree]
+combine [] = []
+combine [t] = [t]
+combine ts =
+  let freqs = map freq ts
+      freqSums = zipWith (+) freqs (tail freqs)
+      minSum = minimum freqSums
+   in combine' minSum ts
  where
-  extractFreq :: Tree HuffmanTreeNode -> Int
-  extractFreq (Node (SingleChar _ x) _) = x
-  extractFreq (Node (Sum x) _) = x
+  combine' x (t : t' : rest) =
+    if freq t + freq t' == x
+      then Node (Sum x) [t, t'] : rest
+      else t : combine' x (t' : rest)
+  combine' _ [t] = [t]
+  combine' _ [] = []
+
+  freq (Node (SingleChar _ x) _) = x
+  freq (Node (Sum x) _) = x
 
   combine :: Tree HuffmanTreeNode -> Tree HuffmanTreeNode -> Tree HuffmanTreeNode
   combine less greater =
