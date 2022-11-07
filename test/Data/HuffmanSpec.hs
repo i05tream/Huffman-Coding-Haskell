@@ -22,26 +22,17 @@ spec = do
                      , Node (Sum 7) [leaf 'y' 4, leaf 'z' 3]
                      ]
   describe "huffmanTree" $ do
-    context "when number of tree is 1" $ do
-      it "returns tree" $ do
-        let tree = Node (Sum 3) [left, right]
-            left = leaf 'a' 2
-            right = leaf 'b' 1
-        huffmanTree [tree] `shouldBe` tree
-    context "when some trees exist" $
-      it "combine trees" $ do
-        let leaves' = [leaf 'x' 700, leaf 'y' 7, leaf 'z' 70]
-            tree =
-              Node
-                (Sum 777)
-                [ leaf 'x' 700
-                , Node
-                    (Sum 77)
-                    [ leaf 'z' 70
-                    , leaf 'y' 7
-                    ]
-                ]
-        huffmanTree leaves' `shouldBe` tree
+    it "returns Huffman tree" $ do
+      huffmanTree "ABCBBA"
+        `shouldBe` Node
+          (Sum 6)
+          [ leaf 'B' 3
+          , Node
+              (Sum 3)
+              [ leaf 'A' 2
+              , leaf 'C' 1
+              ]
+          ]
   describe "huffmanCodeTable" $ do
     context "when apply to leaf" $
       it "return huffman code" $ do
