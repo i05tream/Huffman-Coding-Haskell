@@ -19,3 +19,11 @@ spec = do
             , (Node (SingleChar 'f' 1) [])
             ]
       initialFrequency "dedfed" `shouldBe` result
+  describe "genHuffmanTree" $ do
+    context "when number of tree is 1" $ do
+      it "returns tree" $ do
+        let left = Node (SingleChar 'a' 2) []
+            right = Node (SingleChar 'b' 1) []
+            huffmanTree = Node (Sum 3) [right, left]
+            leaves = [right, left]
+        genHuffmanTree leaves `shouldBe` huffmanTree
