@@ -6,6 +6,8 @@ import Data.Tree
 
 data HuffmanTreeNode = SingleChar Char Int | Sum Int deriving (Show, Eq)
 
+type HuffmanTree = Tree HuffmanTreeNode
+
 {- |
  Huffman treeを作る際の最初の葉を求める関数
 
@@ -14,7 +16,7 @@ data HuffmanTreeNode = SingleChar Char Int | Sum Int deriving (Show, Eq)
  >>> leaves "BACAAB"
  [Node {rootLabel = SingleChar 'A' 3, subForest = []},Node {rootLabel = SingleChar 'B' 2, subForest = []},Node {rootLabel = SingleChar 'C' 1, subForest = []}]
 -}
-leaves :: String -> [Tree HuffmanTreeNode]
+leaves :: String -> [HuffmanTree]
 leaves cs = [Node (SingleChar c n) [] | (c, n) <- freqsDesc]
  where
   freqsDesc = reverse . sortOn snd $ freqs
@@ -32,6 +34,10 @@ leaves cs = [Node (SingleChar c n) [] | (c, n) <- freqsDesc]
 chunkSameChars :: String -> [String]
 chunkSameChars "" = []
 chunkSameChars cs@(c : _) = let (chunk, rest) = span (== c) cs in chunk : chunkSameChars rest
+
+-- | Huffman treeの葉からHuffman treeを生成する関数
+huffmanTree :: [HuffmanTree] -> HuffmanTree
+huffmanTree [t] = t
 
 genHuffmanTree :: [Tree HuffmanTreeNode] -> Tree HuffmanTreeNode
 genHuffmanTree [t] = t
