@@ -56,9 +56,12 @@ combine ts =
   freq (Node (SingleChar _ x) _) = x
   freq (Node (Sum x) _) = x
 
-  combine :: Tree HuffmanTreeNode -> Tree HuffmanTreeNode -> Tree HuffmanTreeNode
-  combine less greater =
-    Node (Sum (extractFreq less + extractFreq greater)) [greater, less]
+-- | 文字列からHuffman treeを生成する関数
+huffmanTree :: String -> HuffmanTree
+huffmanTree = leavesToTree . leaves
+ where
+  leavesToTree [t] = t
+  leavesToTree ts = leavesToTree . combine $ ts
 
 huffmanCodeTable :: Tree HuffmanTreeNode -> String -> [(Char, String)]
 huffmanCodeTable (Node (SingleChar c _) []) code = [(c, code)]
