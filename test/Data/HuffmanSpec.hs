@@ -34,16 +34,20 @@ spec = do
               ]
           ]
   describe "huffmanCodeMap" $ do
-    it "returns table of each Char and its code" $ do
-      huffmanCodeMap "AAAAAABBCDDEEEEEF"
-        `shouldBe` fromList
-          [ ('A', "00")
-          , ('E', "01")
-          , ('B', "100")
-          , ('D', "101")
-          , ('C', "110")
-          , ('F', "111")
-          ]
+    context "when string has more than 2 different letters" $ do
+      it "returns table of each Char and its code" $ do
+        huffmanCodeMap "AAAAAABBCDDEEEEEF"
+          `shouldBe` fromList
+            [ ('A', "00")
+            , ('E', "01")
+            , ('B', "100")
+            , ('D', "101")
+            , ('C', "110")
+            , ('F', "111")
+            ]
+    context "when string has just 1 letter" $ do
+      it "returns table" $ do
+        huffmanCodeMap "AAA" `shouldBe` fromList [('A', "0")]
  where
   leaf :: Char -> Int -> Tree HuffmanTreeNode
   leaf c x = Node (SingleChar c x) []
